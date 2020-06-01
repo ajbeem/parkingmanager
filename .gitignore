@@ -56,7 +56,4 @@ local.properties
 .worksheet
 
 # Connection Config
-IfaceSingletonConect.java
-src/com/pcentaury/parkingmanager/services/IfaceSingletonConect.java
-src/com/pcentaury/parkingmanager/services/IfaceSingletonConect.java
 src/com/pcentaury/parkingmanager/services/IfaceSingletonConect.java
