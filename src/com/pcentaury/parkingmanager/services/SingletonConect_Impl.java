@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class SingletonConect_Impl implements IfaceSingletonConect {
-	static Connection conn= null;
+	public static Connection conn= null;
 
 	public SingletonConect_Impl() {
 		try {
