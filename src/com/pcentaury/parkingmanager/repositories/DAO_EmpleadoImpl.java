@@ -1,6 +1,7 @@
 package com.pcentaury.parkingmanager.repositories;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,45 +11,47 @@ import com.pcentaury.parkingmanager.services.SingletonConect_Impl;
 
 public class DAO_EmpleadoImpl implements DAO_Empleado {
 	IfaceSingletonConect conx = new SingletonConect_Impl();
-	private List<Empleado> empList = new ArrayList();
-	// private Connection conn;
 
 	@Override
 	public void CrearEmpleado(Empleado emp) throws Exception {
+		// TODO Auto-generated method stub
 		try {
 			SingletonConect_Impl.conn = conx.getConnection();
-			// conn = conx.getConnection();
-			PreparedStatement pstat = SingletonConect_Impl.conn
-					.prepareStatement("INSERT INTO empleados(id, nombres, apellidopaterno, apellidomaterno,"
-							+ "nombreusuario, password, email, puesto, salariobase)" + "VALUES (null,?,?,?,?,?,?,?,?)");
-			pstat.setString(1, emp.getNombres());
-			pstat.setString(2, emp.getApellidopaterno());
-			pstat.setString(3, emp.getApellidomaterno());
-			pstat.setString(4, emp.getNombreusuario());
-			pstat.setString(5, emp.getPassword());
-			pstat.setString(6, emp.getEmail());
-			pstat.setString(7, emp.getPuesto());
-			pstat.setFloat(8, emp.getSalariobase());
-			int rowAffected = pstat.executeUpdate();
-			System.out.println("Resultado de la consulta: " + rowAffected);
-
+			PreparedStatement PsT1 = SingletonConect_Impl.conn.prepareStatement(""
+					+ "INSERT INTO empleados(id, nombres, apellidopaterno, apellidomaterno,"
+					+ "nombreusuario, password, email, puesto, salariobase)"
+					+ "VALUES(null,?,?,?,?,?,?,?,?)");
+			PsT1.setString(1, emp.getNombres());
+			PsT1.setString(2, emp.getApellidopaterno());
+			PsT1.setString(3, emp.getApellidomaterno());
+			PsT1.setString(4, emp.getNombreusuario());
+			PsT1.setString(5, emp.getPassword());
+			PsT1.setString(6, emp.getEmail());
+			PsT1.setString(7, emp.getPuesto());
+			PsT1.setFloat(8, emp.getSalariobase());
+			
+			int row = PsT1.executeUpdate();
+			System.out.println("Registros agregados: "+ row);
+			PsT1.close();
+			
 		} catch (Exception e) {
 			throw e;
-		} finally {
+		}finally {
 			conx.closeConnection();
 		}
+		
 	}
 
 	@Override
 	public Empleado GetEmpleado(Empleado gEmp) throws Exception {
-		System.out.println("Parametro recibido: "+ gEmp.getId());
 		Empleado emp1 = new Empleado();
 		try {
 			SingletonConect_Impl.conn = conx.getConnection();
-			PreparedStatement psT = SingletonConect_Impl.conn.prepareStatement("SELECT * FROM empleados WHERE id = ?");
-			psT.setInt(1, gEmp.getId());
-			ResultSet rs = psT.executeQuery();
-			while (rs.next()) {				
+			PreparedStatement PsT2 = SingletonConect_Impl.conn.prepareStatement(""
+					+ "SELECT * FROM empleados WHERE id=?");
+			PsT2.setInt(1, gEmp.getId());
+			ResultSet rs = PsT2.executeQuery();
+			while(rs.next()) {
 				emp1.setId(rs.getInt("id"));
 				emp1.setNombres(rs.getString("nombres"));
 				emp1.setApellidopaterno(rs.getString("apellidopaterno"));
@@ -59,37 +62,72 @@ public class DAO_EmpleadoImpl implements DAO_Empleado {
 				emp1.setPuesto(rs.getString("puesto"));
 				emp1.setSalariobase((float) rs.getFloat("salariobase"));
 			}
+			PsT2.close();
+			
 		} catch (Exception e) {
 			throw e;
-		} finally {
+		}finally {
 			conx.closeConnection();
 		}
 		return emp1;
+		
+	}
+	
 
+	@Override
+	public List<Empleado> listarEmpleados() throws Exception {
+		List <Empleado> list = new ArrayList();
+		try {
+			SingletonConect_Impl.conn = conx.getConnection();
+			PreparedStatement PsT3 = SingletonConect_Impl.conn.prepareStatement(
+					"SELECT * FROM empleados");
+			ResultSet rs = PsT3.executeQuery();
+			while(rs.next()) {
+				Empleado emp2 = new Empleado();
+				emp2.setId(rs.getInt("id"));
+				emp2.setNombres(rs.getString("nombres"));
+				emp2.setApellidopaterno(rs.getString("apellidopaterno"));
+				emp2.setApellidomaterno(rs.getString("apellidomaterno"));
+				emp2.setNombreusuario(rs.getString("nombreusuario"));
+				emp2.setPassword(rs.getString("password"));
+				emp2.setEmail(rs.getString("email"));
+				emp2.setPuesto(rs.getString("puesto"));
+				emp2.setSalariobase((float) rs.getFloat("salariobase"));
+				list.add(emp2);
+			}
+			PsT3.close();
+			
+		} catch (Exception e) {
+			throw e;
+		}finally {
+			conx.closeConnection();
+		}
+		return list;
 	}
 
 	@Override
 	public void EditEmpleado(Empleado empEdit) throws Exception {
 		try {
 			SingletonConect_Impl.conn = conx.getConnection();
-			PreparedStatement PsT = SingletonConect_Impl.conn.prepareStatement(
-					"UPDATE empleados SET nombres=?,apellidopaterno=?,apellidomaterno=?,nombreusuario=?,password=?,"
-							+ "email=?,puesto=?,salariobase=? WHERE id=?");
-			PsT.setString(1, empEdit.getNombres());
-			PsT.setString(2, empEdit.getApellidopaterno());
-			PsT.setString(3, empEdit.getApellidomaterno());
-			PsT.setString(4, empEdit.getNombreusuario());
-			PsT.setString(5, empEdit.getPassword());
-			PsT.setString(6, empEdit.getEmail());
-			PsT.setString(7, empEdit.getPuesto());
-			PsT.setFloat(8, empEdit.getSalariobase());
-			PsT.setInt(9, empEdit.getId());
-			int row = PsT.executeUpdate();
-			PsT.close();
-			System.out.println(row + " registro(s) actualizados");
+			PreparedStatement PsT4 = SingletonConect_Impl.conn.prepareStatement(""
+					+ "UPDATE empleados SET nombres=?,apellidopaterno=?,apellidomaterno=?"
+					+ ",nombreusuario=?,password=?,email=?,puesto=?,salariobase=? "
+					+ "WHERE id=?");
+			PsT4.setString(1, empEdit.getNombres());
+			PsT4.setString(2, empEdit.getApellidopaterno());
+			PsT4.setString(3, empEdit.getApellidomaterno());
+			PsT4.setString(4, empEdit.getNombreusuario());
+			PsT4.setString(5, empEdit.getPassword());
+			PsT4.setString(6, empEdit.getEmail());
+			PsT4.setString(7, empEdit.getPuesto());
+			PsT4.setFloat(8, empEdit.getSalariobase());
+			PsT4.setInt(9, empEdit.getId());
+			int row = PsT4.executeUpdate();
+			System.out.println("Registro actualizado: "+row);
+			PsT4.close();			
 		} catch (Exception e) {
 			throw e;
-		} finally {
+		}finally {
 			conx.closeConnection();
 		}
 	}
@@ -98,46 +136,18 @@ public class DAO_EmpleadoImpl implements DAO_Empleado {
 	public void EliminarEmpleado(Empleado empDel) throws Exception {
 		try {
 			SingletonConect_Impl.conn = conx.getConnection();
-			PreparedStatement PstDel = SingletonConect_Impl.conn.prepareStatement(
-					"DELETE FROM empleados WHERE id=?"
-					);
-			PstDel.setInt(1, empDel.getId());
-			int resultado = PstDel.executeUpdate();
-			PstDel.close();
-			System.out.println("Resultado de la consulta: "+resultado);
+			PreparedStatement PsT5 = SingletonConect_Impl.conn.prepareStatement(""
+					+ "DELETE FROM empleados WHERE id=?");
+			PsT5.setInt(1, empDel.getId());
+			int row = PsT5.executeUpdate();
+			System.out.println("Registros borrados: "+row);
+			PsT5.close();
 		} catch (Exception e) {
 			throw e;
-		} finally {
+		}finally {
 			conx.closeConnection();
 		}
-	}
-
-	@Override
-	public List<Empleado> listarEmpleados() throws Exception {
-		try {
-			SingletonConect_Impl.conn = conx.getConnection();
-			PreparedStatement psT = SingletonConect_Impl.conn.prepareStatement("SELECT * FROM empleados");
-			ResultSet rs = psT.executeQuery();
-			while (rs.next()) {
-				Empleado emp1 = new Empleado();
-				emp1.setId(rs.getInt("id"));
-				emp1.setNombres(rs.getString("nombres"));
-				emp1.setApellidopaterno(rs.getString("apellidopaterno"));
-				emp1.setApellidomaterno(rs.getString("apellidomaterno"));
-				emp1.setNombreusuario(rs.getString("nombreusuario"));
-				emp1.setPassword(rs.getString("password"));
-				emp1.setEmail(rs.getString("email"));
-				emp1.setPuesto(rs.getString("puesto"));
-				emp1.setSalariobase((float) rs.getFloat("salariobase"));
-				empList.add(emp1);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			SingletonConect_Impl.conn.close();
-			conx.closeConnection();
-		}
-		return empList;
+		
 	}
 
 }

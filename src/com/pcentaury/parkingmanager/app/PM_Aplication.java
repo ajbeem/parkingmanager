@@ -13,7 +13,6 @@ public class PM_Aplication {
 
 	public PM_Aplication() {
 		//conx.getConnection();
-		//NewEmployee();
 	}
 	
 	public void pm_closeCnx() {
@@ -21,82 +20,81 @@ public class PM_Aplication {
 	}
 	
 	public void NewEmployee() {
-		emp1.setNombres("Alfredo");
-		emp1.setApellidopaterno("Jimenez");
-		emp1.setApellidomaterno("Miguel");
-		emp1.setNombreusuario("ajbeem");
-		emp1.setPassword("wsd456");
-		emp1.setEmail("fred.jm.74@gmail.com");
-		emp1.setPuesto("Administrador");
-		emp1.setSalariobase((float) 459.30);
 		try {
+			emp1.setNombres("Maira");
+			emp1.setApellidopaterno("S");
+			emp1.setApellidomaterno("M");
+			emp1.setNombreusuario("suem");
+			emp1.setPassword("987654");
+			emp1.setEmail("suem4@contoso.com");
+			emp1.setPuesto("Acomodador");
+			emp1.setSalariobase((float) 259.30);
+			
 			emp.CrearEmpleado(emp1);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void allEmployees() {
-		try {
-			for(Empleado e : emp.listarEmpleados()) {
-				System.out.println(e.getNombres());
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public void getEmployee() {
+	public void GetEmployee() {
 		Empleado getEmp = new Empleado();
-		int id= 1;
-		emp1.setId(id);
+		emp1.setId(1);
 		try {
 			getEmp = emp.GetEmpleado(emp1);
-			System.out.println(getEmp.getNombres());
+			System.out.println("Nombre del empleado: "+ getEmp.getNombres());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void GetAllEmployees() {
+		try {
+			for(Empleado e : emp.listarEmpleados()) {
+				System.out.println("Nombre del usuario:"+ e.getNombres());
+				System.out.println("Correo electrónico del usuario: "+e.getEmail());
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
 	public void UpdateEmployee() {
-		emp1.setId(1);
-		emp1.setNombres("Alfred");
-		emp1.setApellidopaterno("Jim");
-		emp1.setApellidomaterno("Mig");
-		emp1.setNombreusuario("ajbeem");
-		emp1.setPassword("wsd456");
-		emp1.setEmail("fred.jm.74@contoso.com");
-		emp1.setPuesto("Administrador");
-		emp1.setSalariobase((float) 559.30);
 		try {
+			emp1.setId(1);
+			emp1.setNombres("Alfred");
+			emp1.setApellidopaterno("Jim");
+			emp1.setApellidomaterno("Mig");
+			emp1.setNombreusuario("ajbeem");
+			emp1.setPassword("wsd456");
+			emp1.setEmail("fred.jm.74@contoso.com");
+			emp1.setPuesto("Administrador");
+			emp1.setSalariobase((float) 759.30);
 			emp.EditEmpleado(emp1);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	private void DeleteEmployee() {
-		emp1.setId(6);
+	public void DeleteEmployee() {
 		try {
+			emp1.setId(8);
 			emp.EliminarEmpleado(emp1);
-			System.out.println("Usuario eliminado con id: "+emp1.getId());
+			
 		} catch (Exception e) {
-			// TODO: handle exception
-		e.printStackTrace();	
+			e.printStackTrace();
 		}
 	}
 
 	public static void main(String[] args) {
 		PM_Aplication objt1 = new PM_Aplication();
-		//objt1.pm_closeCnx();
-		objt1.allEmployees();
-		System.out.println("----------------*******************-------------------");
-		objt1.getEmployee();
-		System.out.println("----------------*******************-------------------");
-		//objt1.UpdateEmployee();
-		//objt1.DeleteEmployee();
+		//objt1.GetEmployee();
 		//objt1.NewEmployee();
+		//objt1.pm_closeCnx();
+		//objt1.GetAllEmployees();
+		//objt1.UpdateEmployee();
+		objt1.DeleteEmployee();
 	}
 
 }
