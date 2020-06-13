@@ -15,9 +15,9 @@ public class SingletonConect_Impl implements IfaceSingletonConect {
 		}catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
-		if(conn!= null) {
+		/*if(conn!= null) {
 			System.out.println("Conexion exitosa");
-		}
+		}*/
 	}
 
 	@Override
