@@ -57,3 +57,4 @@ local.properties
 
 # Connection Config
 src/com/pcentaury/parkingmanager/services/IfaceSingletonConect.java
+src/com/pcentaury/parkingmanager/services/IfaceSingletonConect.java
