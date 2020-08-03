@@ -49,7 +49,7 @@ public class DAO_Boletos_Impl implements DAO_Boletos {
 	private Boletos bolWork;
 
 	@Override
-	public Byte CreaBoleto(Boletos tck1, String roll) throws Exception {
+	public Byte CreaBoleto(Boletos tck1, int idEmpleado, String roll) throws Exception {
 		try {
 			emp1 = new Empleado();
 			cj = new DAO_Cajon_Impl();
@@ -61,34 +61,30 @@ public class DAO_Boletos_Impl implements DAO_Boletos {
 			 *  VALUES ([value-1],[value-2],[value-3],[value-4],[value-5],[value-6],[value-7],[value-8],[value-9],[value-10],[value-11],[value-12],[value-13],[value-14])
 			 */
 			if(roll.equals("ADMIN")) {
-				java.util.Date date=new java.util.Date();
-				java.sql.Date sqlDate=new java.sql.Date(date.getTime());
-				java.sql.Timestamp sqlTime=new java.sql.Timestamp(date.getTime());
 				conTkc = conx.getConnection();
-				/*PST = conTkc.prepareStatement("SELECT nombres FROM empleados WHERE id=?");
-				PST.setInt(1, tck1.getId_acomodador());
+				PST = conTkc.prepareStatement("SELECT nombres FROM empleados WHERE id=?");
+				PST.setInt(1, idEmpleado);
 				rstTkct = PST.executeQuery();
 				while(rstTkct.next()) {
 					emp1.setNombres(rstTkct.getString("nombres"));
-				}*/
-				PST1 = conTkc.prepareStatement("INSERT INTO boletos (id, marca, modelo, color, placas, estadofisico"
+				}
+				PST = conTkc.prepareStatement("INSERT INTO boletos (id, marca, modelo, color, placas, estadofisico"
 						+ ", fechaingreso, horaingreso, horasalida, id_cajon, id_acomodador, nombreacomodador)"
-						+ " VALUES (null,?,?,?,?,?,?,?,null,?,?,(SELECT nombres FROM empleados WHERE id=?))");
-				PST1.setString(1, tck1.getMarca());
-				PST1.setString(2, tck1.getModelo());
-				PST1.setString(3, tck1.getColor());
-				PST1.setString(4, tck1.getPlacas());
-				PST1.setString(5, tck1.getEstadofisico());
-				PST1.setDate(6, sqlDate);
-				PST1.setTimestamp(7, sqlTime);
-				PST1.setInt(8, tck1.getId_cajon());
-				PST1.setInt(9, tck1.getId_acomodador());
-				PST1.setInt(10, tck1.getId_acomodador());
+						+ " VALUES (null,?,?,?,?,?,?,?,null,?,?,?)");
+				PST.setString(1, tck1.getMarca());
+				PST.setString(2, tck1.getModelo());
+				PST.setString(3, tck1.getColor());
+				PST.setString(4, tck1.getPlacas());
+				PST.setString(5, tck1.getEstadofisico());
+				PST.setDate(6, tck1.getFechaingreso());
+				PST.setTimestamp(7,tck1.getHoraingreso());
+				PST.setInt(8, tck1.getId_cajon());
+				PST.setInt(9, idEmpleado);
+				PST.setString(10, emp1.getNombres());
 				affectedrow = (byte) PST1.executeUpdate();
-				cajon.setId(tck1.getId_cajon());
-				cajon.setDisponibilidad((byte)1);
+				cajon.setId(tck1.getId());
 				cj.asigCajon(cajon, roll);
-				
+				affectedrow = (byte)PST.executeUpdate();				
 			}else {
 				System.out.println("No puedes realizar esta operación");
 			}
@@ -100,7 +96,7 @@ public class DAO_Boletos_Impl implements DAO_Boletos {
 			cj = null;
 			cajon = null;
 			conx.closeConnection();
-			//PST.close();
+			PST.close();
 			PST1.close();
 		}
 		return affectedrow;

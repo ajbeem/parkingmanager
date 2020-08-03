@@ -5,7 +5,7 @@ import java.util.List;
 import com.pcentaury.parkingmanager.models.Boletos;
 
 public interface DAO_Boletos {
-	Byte CreaBoleto(Boletos tck1, String roll) throws Exception;
+	Byte CreaBoleto(Boletos tck1, int idEmpleado, String roll) throws Exception;
 	Boletos GetBoletoById(int idTck, String roll1) throws Exception;
 	List<Boletos> getAllBoletos() throws Exception;
 	void UpdtBoleto(Boletos tck2) throws Exception;
